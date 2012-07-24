@@ -290,13 +290,20 @@
       return this.ajax('read', this.collection.items, options);
     };
 
-    Sync.prototype.incremental = function() {
-      var _this = this;
-      return this.pull({
-        success: function() {
-          return _this.push();
+    Sync.prototype.incremental = function(options) {
+      var success,
+        _this = this;
+      if (options == null) {
+        options = {};
+      }
+      success = options.success;
+      options.success = function(response, status, xhr) {
+        if (success) {
+          success(response, status, xhr);
         }
-      });
+        return _this.push();
+      };
+      return this.pull(options);
     };
 
     Sync.prototype.prepareOptions = function(options) {

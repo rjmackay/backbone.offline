@@ -213,8 +213,12 @@ class Offline.Sync
   # @storage.sync.incremental() - incremental storage synchronization
   # 1. pull() - request data from server
   # 2. push() - send modified data to server
-  incremental: ->
-    @pull success: => @push()
+  incremental: (options = {}) ->
+    success = options.success
+    options.success = (response, status, xhr) =>
+      success(response, status, xhr) if success
+      @push()
+    @pull options
 
   # Runs incremental sync when storage was offline
   # after current request therefore don't duplicate requests
