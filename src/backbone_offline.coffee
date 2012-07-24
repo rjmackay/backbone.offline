@@ -201,12 +201,14 @@ class Offline.Sync
   # 1. clear collection and store
   # 2. load new data
   full: (options = {}) ->
-    @ajax 'read', @collection.items, success: (response, status, xhr) =>
+    success = options.success
+    options.success = (response, status, xhr) =>
       @storage.clear()
       @collection.items.reset([], silent: true)
       @collection.items.create(item, silent: true, local: true, regenerateId: true) for item in response
       @collection.items.trigger('reset') unless options.silent
-      options.success(response) if options.success
+      success(response, status, xhr) if success
+    @ajax 'read', @collection.items, options
 
   # @storage.sync.incremental() - incremental storage synchronization
   # 1. pull() - request data from server
@@ -231,10 +233,12 @@ class Offline.Sync
   #
   # @storage.sync.pull()
   pull: (options = {}) ->
-    @ajax 'read', @collection.items, success: (response, status, xhr) =>
+    success = options.success
+    options.success = (response, status, xhr) =>
       @collection.destroyDiff(response)
       @pullItem(item) for item in response
-      options.success() if options.success
+      success(response, status, xhr) if success
+    @ajax 'read', @collection.items, options
 
   pullItem: (item) ->
     local = @collection.get(item.id)
