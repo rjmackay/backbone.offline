@@ -313,7 +313,9 @@
         this.storage.removeItem('offline');
         success = options.success;
         return options.success = function(response, status, xhr) {
-          success(response, status, xhr);
+          if (success) {
+            success(response, status, xhr);
+          }
           return _this.incremental();
         };
       }

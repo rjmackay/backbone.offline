@@ -227,7 +227,7 @@ class Offline.Sync
       @storage.removeItem('offline')
       success = options.success
       options.success = (response, status, xhr) =>
-        success(response, status, xhr)
+        success(response, status, xhr) if success
         @incremental()
 
   # Requests data from the server and merges it with a collection.
