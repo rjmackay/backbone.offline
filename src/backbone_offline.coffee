@@ -258,7 +258,7 @@ class Offline.Sync
       @collection.items.create(item, local: true)
 
   updateItem: (item, model) ->
-    if (new Date(model.get 'updated_at')) < (new Date(item.updated_at))
+    if (new Date(model.get 'updated_at')) <= (new Date(item.updated_at))
       delete item.id
       model.save item, local: true
 
