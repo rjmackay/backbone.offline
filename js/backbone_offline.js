@@ -318,7 +318,7 @@
     };
 
     Sync.prototype.prepareOptions = function(options) {
-      var success,
+      var newoptions, success,
         _this = this;
       if (this.storage.getItem('offline')) {
         this.storage.removeItem('offline');
@@ -326,11 +326,13 @@
           return;
         }
         success = options.success;
+        options.success = null;
+        newoptions = _.clone(options);
         return options.success = function(response, status, xhr) {
           if (success) {
             success(response, status, xhr);
           }
-          return _this.incremental();
+          return _this.incremental(newoptions);
         };
       }
     };

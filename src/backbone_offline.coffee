@@ -230,10 +230,13 @@ class Offline.Sync
       @storage.removeItem('offline')
       # Don't change options if we're already in an incremental sync
       return if options.incremental
+      # Setup new success callback, passing through all options except success
       success = options.success
+      options.success = null
+      newoptions = _.clone(options)
       options.success = (response, status, xhr) =>
         success(response, status, xhr) if success
-        @incremental()
+        @incremental(newoptions)
 
   # Requests data from the server and merges it with a collection.
   # It's useful when you want to refresh your collection and don't want to reload it completely.
