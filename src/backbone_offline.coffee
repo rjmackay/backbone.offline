@@ -1,8 +1,10 @@
+###
 #    Backbone.offline allows your Backbone.js app to work offline
 #    https://github.com/Ask11/backbone.offline
 #
 #    (c) 2012 - Aleksey Kulikov
 #    May be freely distributed according to MIT license.
+###
 
 window.Offline =
   VERSION: '0.4.0.alfa'
