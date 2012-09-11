@@ -307,6 +307,7 @@
         options = {};
       }
       success = options.success;
+      options.incremental = true;
       options.success = function(response, status, xhr) {
         if (success) {
           success(response, status, xhr);
@@ -321,6 +322,9 @@
         _this = this;
       if (this.storage.getItem('offline')) {
         this.storage.removeItem('offline');
+        if (options.incremental) {
+          return;
+        }
         success = options.success;
         return options.success = function(response, status, xhr) {
           if (success) {

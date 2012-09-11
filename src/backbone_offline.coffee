@@ -217,6 +217,7 @@ class Offline.Sync
   # 2. push() - send modified data to server
   incremental: (options = {}) ->
     success = options.success
+    options.incremental = true
     options.success = (response, status, xhr) =>
       success(response, status, xhr) if success
       @push()
@@ -227,6 +228,8 @@ class Offline.Sync
   prepareOptions: (options) ->
     if @storage.getItem('offline')
       @storage.removeItem('offline')
+      # Don't change options if we're already in an incremental sync
+      return if options.incremental
       success = options.success
       options.success = (response, status, xhr) =>
         success(response, status, xhr) if success
