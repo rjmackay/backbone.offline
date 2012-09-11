@@ -55,6 +55,7 @@ Backbone.sync = Offline.sync
 # @sync - instance of Offline.Sync
 # @allIds - index of ids for the collection
 # @destroyIds - index for destroyed models
+# @updateOnPush - overwrite items with server values after push to server
 class Offline.Storage
 
   # Name of storage and collection link are required params
@@ -65,6 +66,7 @@ class Offline.Storage
     @sync = new Offline.Sync(@collection, this)
     @keys = options.keys || {}
     @autoPush = options.autoPush || false
+    @updateOnPush = options.updateOnPush || false
 
   # Test from modernizr: https://github.com/Modernizr/Modernizr/blob/master/modernizr.js
   # Normally, we could not test that directly and need to do a
@@ -290,6 +292,7 @@ class Offline.Sync
 
     @ajax method, item, success: (response, status, xhr) =>
       item.set(sid: response.id) if method is 'create'
+      @updateItem(response, item) if @storage.updateOnPush
       item.save {dirty: false}, {local: true}
 
     item.attributes.id = localId; item.id = localId
