@@ -137,7 +137,9 @@ class Offline.Storage
 
   save: (item, options = {}) ->
     item.set(sid: item.attributes?.sid || item.attributes?.id || 'new', id: @guid()) if options.regenerateId
-    item.set(updated_at: (new Date()).toJSON(), dirty: true) unless options.local
+    # Hack to get around PHP date handling ignoring the milliseconds
+    (updated_at = new Date()).setMilliseconds(0)
+    item.set(updated_at: updated_at.toJSON(), dirty: true) unless options.local
 
     @replaceKeyFields(item, 'local')
     @setItem "#{@name}-#{item.id}", JSON.stringify(item)
